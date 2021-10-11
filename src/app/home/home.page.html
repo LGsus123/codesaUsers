@@ -1,0 +1,118 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-icon size="large" slot="start" name="person-outline"></ion-icon>
+    <ion-title> 
+      Control de usuarios
+    </ion-title>    
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar type="text" (ionInput)="getItems($event)"  placeholder="Buscar usuario"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="container" *ngIf="roles == false">
+    <ion-card class="card" (click)="crearRoles()"> <br><br><br><br><br><br>
+      No se han registrado usuarios aún.
+    <p>Presiona aquí para empezar</p>
+  </ion-card>   
+  </div>
+
+  <ion-list>
+
+    <ion-item-sliding *ngFor="let item of usuarios; let i = index">
+
+        <ion-item>
+            <ion-label>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="box" size="1">
+                      <ion-icon size="small" name="chevron-forward-outline"> </ion-icon>
+                    </ion-col>
+                  
+
+                  <ion-col size="11">
+                  
+                    <ion-row>
+                      <ion-col size="1">
+                        <strong> ID </strong>
+                      </ion-col>
+                      <ion-col size="6">
+                        <strong> Nombre </strong>
+                      </ion-col>
+                      <ion-col size="2">
+                        <strong> Rol </strong>
+                      </ion-col>
+                      <ion-col size="2">
+                        <strong> Estado </strong>
+                      </ion-col>
+                    </ion-row>
+
+                    <ion-row>
+                      <ion-col size="1" wrap-text>
+                        {{ item.identifiacion }}
+                      </ion-col>
+                      <ion-col size="6" wrap-text>
+                        {{ item.nombre_usuario }} 
+                      </ion-col>
+                      <ion-col size="2" wrap-text>
+                        <ion-badge *ngIf="item.rol_usuario == 'AUXILIAR'">AUX.</ion-badge>
+                        <ion-badge *ngIf="item.rol_usuario == 'AUDITOR'">AUD.</ion-badge>
+                        <ion-badge *ngIf="item.rol_usuario == 'ADMINISTRADOR'">ADM.</ion-badge>
+                      </ion-col>
+                      <ion-col size="2" wrap-text>
+                        <ion-badge *ngIf="item.estado == 'ACTIVO'" color="success">
+                          <ion-icon name="checkmark-circle-outline"></ion-icon>
+                        </ion-badge>
+                        <ion-badge *ngIf="item.estado == 'INACTIVO'" color="danger">
+                          <ion-icon name="close-circle-outline"></ion-icon>
+                        </ion-badge>
+                      </ion-col>
+                    </ion-row>                 
+                </ion-col>  
+              </ion-row>
+                </ion-grid>
+            </ion-label>
+        </ion-item>
+
+        <ion-item-options side="start">
+
+            <ion-item-option color="secondary" (click)="editar(item)">
+              <ion-icon size="large"  name="create-outline"></ion-icon>
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="eliminarUsuario(item, i)">
+              <ion-icon size="large" name="trash-outline"></ion-icon>
+          </ion-item-option>
+
+            <ion-item-option *ngIf="item.sincronizado == '0' && item.estado == 2"
+                color="secondary" (click)="goToEditar(item)">
+                <ion-icon size="large" name="create-outline"></ion-icon>
+            </ion-item-option>
+        </ion-item-options>
+
+    </ion-item-sliding>
+
+</ion-list>
+
+<ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content
+    pullingIcon="chevron-down-circle-outline"
+    pullingText="Actualizar página"
+    refreshingSpinner="circles"
+    refreshingText="Cargando información...">
+  </ion-refresher-content>
+</ion-refresher>
+
+
+  <ion-fab *ngIf="roles == true" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="crearUsuario()">
+        <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+</ion-fab>
+
+<ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+</ion-content>
+

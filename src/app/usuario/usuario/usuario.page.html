@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start" (click)="salir()">
+      <ion-icon name="close-circle-outline" size="large" defaultHref="lista"></ion-icon>
+    </ion-buttons>
+    <ion-title *ngIf="editable == 0">Registrar usuario</ion-title>    
+    <ion-title *ngIf="editable == 1">Editar usuario {{ identifiacion }}</ion-title>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #form="ngForm">   
+    <ion-grid>
+      <ion-row class="justify-content-center">
+    
+
+
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="floating">Nombre:</ion-label>
+            <ion-input name="nombre_usuario" [(ngModel)]="nombre_usuario" type="text" required (ionChange)="printText($event)"> </ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating"> Rol </ion-label>       
+            <ion-select name="rol_usuario" [(ngModel)]="rol_usuario" placeholder="Seleccionar" interface="popover" required (ionChange)="printText($event)">
+              <ion-select-option *ngFor="let item of roles; let i= index" [value]="i + 1" > {{ item.desc }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating"> Estado </ion-label>       
+            <ion-select name="estado" [(ngModel)]="estado" placeholder="Seleccionar" interface="popover" required (ionChange)="printText($event)">
+              <ion-select-option *ngFor="let item of estados" [value]="item.desc" > {{ item.desc }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </form>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>   
+    <ion-button *ngIf="editable == 0" expand="block" (click)="validarNombre(item)"><!--   -->
+      <ion-icon slot="end" name="save-outline"></ion-icon>
+    Guardar
+  </ion-button>
+    <ion-button *ngIf="editable == 1" expand="block" (click)="editarUsuario(item)"><!--   -->
+    <ion-icon slot="end" name="save-outline"></ion-icon>
+    Actualizar
+</ion-button>
+  </ion-toolbar>
+</ion-footer>
